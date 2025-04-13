@@ -1,0 +1,34 @@
+name: Auto Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Read version from file
+        id: version
+        run: |
+          VERSION=$(cat Artifacts/version.txt)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: Auto Release ${{ steps.version.outputs.version }}
+          body: |
+            자동 릴리스입니다. (버전: ${{ steps.version.outputs.version }})
+          files: |
+            Artifacts/MobiManagerLauncher.exe
+            Artifacts/MobiManager.zip
+            Artifacts/version.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
