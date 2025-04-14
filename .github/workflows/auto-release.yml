@@ -3,7 +3,7 @@ name: Auto Release
 on:
   push:
     branches:
-      - main
+      - updates 
 
 permissions:
   contents: write  # ✅ GitHub Releases 작성 권한 필수
@@ -19,7 +19,7 @@ jobs:
       - name: Read version from file
         id: version
         run: |
-          VERSION=$(cat Artifacts/version.txt)
+          VERSION=$(cat version.txt)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
@@ -30,8 +30,8 @@ jobs:
           body: |
             자동 릴리스입니다. (버전: ${{ steps.version.outputs.version }})
           files: |
-            Artifacts/MobiManagerLauncher.exe
-            Artifacts/MobiManager.zip
-            Artifacts/version.txt
+            MobiManagerLauncher.exe
+            MobiManager.zip
+            version.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
